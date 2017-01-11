@@ -47,8 +47,6 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         Intent onResultIntent(Result result, Bitmap barcode);
     }
 
-    private static final float BEEP_VOLUME = 0.10f;
-    private static final long VIBRATE_DURATION = 200L;
     private DecodeCaptureViewHandler handler;
     private DecodeViewfinderView viewfinderView;
     private SurfaceView surfaceView;
@@ -65,6 +63,8 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
     private OnResultIntentListener resultIntentListener;
     private DecodeInterceptor interceptor;
     private boolean isEnableFlash = false;
+    private float beepVolume = 0.10f;
+    private long vibrateDuration = 200L;
 
     public DecodeScanView(Context context) {
         super(context);
@@ -132,6 +132,15 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         if (viewfinderView != null) {
             viewfinderView.setRectColor(rectColor);
         }
+    }
+
+    /**
+     * setBeepVolume
+     *
+     * @param beepVolume beepVolume default = 0.1f
+     */
+    public void setBeepVolume(float beepVolume) {
+        this.beepVolume = beepVolume;
     }
 
     /**
@@ -487,7 +496,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
                 mediaPlayer.setDataSource(file.getFileDescriptor(),
                         file.getStartOffset(), file.getLength());
                 file.close();
-                mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
+                mediaPlayer.setVolume(beepVolume, beepVolume);
                 mediaPlayer.prepare();
             } catch (IOException e) {
                 mediaPlayer = null;
@@ -501,7 +510,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         }
         if (vibrate) {
             Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(VIBRATE_DURATION);
+            vibrator.vibrate(vibrateDuration);
         }
     }
 
