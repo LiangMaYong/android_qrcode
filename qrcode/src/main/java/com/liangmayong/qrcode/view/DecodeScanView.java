@@ -270,6 +270,11 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         CameraManager.get().setFramingMinAndMax(minWidth, minHeight, maxWidth, maxHeight);
     }
 
+    /**
+     * setWithoutStatusBar
+     *
+     * @param withoutStatusBar withoutStatusBar
+     */
     public void setWithoutStatusBar(boolean withoutStatusBar) {
         CameraManager.get().setWithoutStatusBar(withoutStatusBar);
     }

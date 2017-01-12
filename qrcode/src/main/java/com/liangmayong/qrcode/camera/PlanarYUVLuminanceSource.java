@@ -22,7 +22,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
-import android.util.Log;
 
 import com.google.zxing.LuminanceSource;
 
@@ -123,7 +122,6 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
             int[] pixels = new int[width * height];
             byte[] yuv = yuvData;
             int inputOffset = top * dataWidth + left;
-
             for (int y = 0; y < height; y++) {
                 int outputOffset = y * width;
                 for (int x = 0; x < width; x++) {
@@ -143,10 +141,7 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
             }
             Bitmap bitmap2 = getSmallBitmap(bitmap, sw, sh);
             int size = getBitmapSize(bitmap2);
-            Log.d("CroppedGreyscaleBitmap", "bitmap size: " + size);
             if (size / 1024 >= 100) {
-                bitmap.recycle();
-                bitmap = null;
                 return null;
             }
             return bitmap2;
