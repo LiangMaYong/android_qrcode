@@ -153,6 +153,15 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
     }
 
     /**
+     * getResultCode
+     *
+     * @return resultCode
+     */
+    public int getResultCode() {
+        return resultCode;
+    }
+
+    /**
      * setBeepVolume
      *
      * @param beepVolume beepVolume default = 0.1f
