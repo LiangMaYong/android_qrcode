@@ -9,11 +9,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
@@ -65,6 +65,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
     private boolean isEnableFlash = false;
     private float beepVolume = 0.10f;
     private long vibrateDuration = 200L;
+    private int resultCode = Activity.RESULT_OK;
 
     public DecodeScanView(Context context) {
         super(context);
@@ -112,6 +113,14 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            CameraManager.get().requestAutoFocus();
+        }
+        return super.onTouchEvent(event);
+    }
+
     /**
      * setScanColor
      *
@@ -132,6 +141,15 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         if (viewfinderView != null) {
             viewfinderView.setRectColor(rectColor);
         }
+    }
+
+    /**
+     * setResultCode
+     *
+     * @param resultCode resultCode
+     */
+    public void setResultCode(int resultCode) {
+        this.resultCode = resultCode;
     }
 
     /**
@@ -165,6 +183,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
             viewfinderView.setVertical(vertical);
         }
     }
+
 
     /**
      * isScanVertical
@@ -240,6 +259,10 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
      */
     public void setFramingMinAndMax(int minWidth, int minHeight, int maxWidth, int maxHeight) {
         CameraManager.get().setFramingMinAndMax(minWidth, minHeight, maxWidth, maxHeight);
+    }
+
+    public void setWithoutStatusBar(boolean withoutStatusBar) {
+        CameraManager.get().setWithoutStatusBar(withoutStatusBar);
     }
 
     /**
@@ -346,7 +369,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
                     bundle.putParcelable("bitmap", barcode);
                     resultIntent.putExtras(bundle);
                 }
-                activity.setResult(Activity.RESULT_OK, resultIntent);
+                activity.setResult(resultCode, resultIntent);
                 activity.finish();
             }
         }
@@ -465,7 +488,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
     }
 
     @Override
-    public Handler getHandler() {
+    public DecodeCaptureViewHandler getHandler() {
         return handler;
     }
 

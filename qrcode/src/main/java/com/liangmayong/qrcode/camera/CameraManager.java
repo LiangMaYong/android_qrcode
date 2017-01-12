@@ -79,6 +79,20 @@ public final class CameraManager {
     private boolean initialized;
     private boolean previewing;
     private final boolean useOneShotPreviewCallback;
+    private boolean withoutStatusBar = true;
+
+    /**
+     * setWithoutStatusBar
+     *
+     * @param withoutStatusBar withoutStatusBar
+     */
+    public void setWithoutStatusBar(boolean withoutStatusBar) {
+        if (this.withoutStatusBar != withoutStatusBar) {
+            initialized = false;
+        }
+        this.withoutStatusBar = withoutStatusBar;
+    }
+
     /**
      * Preview frames are delivered here, which we pass on to the registered
      * handler. Make sure to clear the handler so it will only receive one
@@ -141,14 +155,31 @@ public final class CameraManager {
         setFramingMinAndMax(240, 240, max, max);
     }
 
+    /**
+     * getScreenHeight
+     *
+     * @return screen height
+     */
     public int getScreenHeight() {
+        if (withoutStatusBar) {
+            return CameraScreen.getScreenHeightWithoutStatusBar(context);
+        }
         return CameraScreen.getScreenHeight(context);
     }
 
+
+    /**
+     * getScreenWidth
+     *
+     * @return screen width
+     */
     public int getScreenWidth() {
         return CameraScreen.getScreenWidth(context);
     }
 
+    /**
+     * enableFlash
+     */
     public void enableFlash() {
         FlashlightManager.enableFlashlight();
         try {
@@ -162,6 +193,9 @@ public final class CameraManager {
         }
     }
 
+    /**
+     * disableFlash
+     */
     public void disableFlash() {
         FlashlightManager.enableFlashlight();
         try {
@@ -195,13 +229,6 @@ public final class CameraManager {
                 configManager.initFromCameraParameters(camera);
             }
             configManager.setDesiredCameraParameters(camera);
-            // FIXME
-            // SharedPreferences prefs =
-            // PreferenceManager.getDefaultSharedPreferences(context);
-            // if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false))
-            // {
-            // FlashlightManager.enableFlashlight();
-            // }
             FlashlightManager.enableFlashlight();
         }
     }
@@ -259,6 +286,17 @@ public final class CameraManager {
                 camera.setPreviewCallback(previewCallback);
             }
         }
+    }
+
+    public void requestAutoFocus() {
+        camera.autoFocus(new Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, Camera camera) {
+                if (success) {
+                    camera.cancelAutoFocus();
+                }
+            }
+        });
     }
 
     /**

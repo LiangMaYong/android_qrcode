@@ -107,7 +107,7 @@ public final class DecodeViewfinderView extends View {
 
     public DecodeViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        framePadding = dip2px(context, 10);
+        framePadding = dip2px(context, 15);
         screenRate = dip2px(context, 15);
         paint = new Paint();
         possibleResultPoints = new HashSet<ResultPoint>(5);
@@ -117,6 +117,7 @@ public final class DecodeViewfinderView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         RectF frame = new RectF(CameraManager.get().getFramingRect());
+//        drawRect(canvas,frame);
         frame.left = frame.left + framePadding;
         frame.right = frame.right - framePadding;
         frame.top = frame.top + framePadding;
