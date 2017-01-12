@@ -366,10 +366,11 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
                 flag = decodeScanListener.handleDecode(result, barcode);
             }
             if (!flag) {
-                Intent resultIntent;
+                Intent resultIntent = null;
                 if (resultIntentListener != null) {
                     resultIntent = resultIntentListener.onResultIntent(result, barcode);
-                } else {
+                }
+                if (resultIntent == null) {
                     resultIntent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putString("result", resultString);
