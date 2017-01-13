@@ -1,5 +1,6 @@
 package com.liangmayong.qrcode.view;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -82,7 +82,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         init(context, attrs);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public DecodeScanView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
@@ -364,7 +364,7 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         String resultString = result.getText();
         String formatString = result.getBarcodeFormat().name();
         if (resultString.equals("")) {
-            restart();
+            restartPreview();
         } else {
             boolean flag = false;
             if (decodeScanListener != null) {
@@ -428,10 +428,12 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
     }
 
     /**
-     * restart
+     * restartPreview
      */
-    public void restart() {
-        handler.obtainMessage(R.id.restart_preview).sendToTarget();
+    public void restartPreview() {
+        if (handler != null) {
+            handler.obtainMessage(R.id.restart_preview).sendToTarget();
+        }
     }
 
     /**
@@ -450,6 +452,11 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         isEnableFlash = false;
     }
 
+    /**
+     * isEnableFlash
+     *
+     * @return isEnableFlash
+     */
     public boolean isEnableFlash() {
         return isEnableFlash;
     }
@@ -476,17 +483,9 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
         }
     }
 
-
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
-        setCameraDisplayOrientation(activity, CameraManager.get().getCamera());
-    }
-
-    public static void setCameraDisplayOrientation(Activity activity, android.hardware.Camera camera) {
-        if (camera != null) {
-            camera.setDisplayOrientation(90);
-        }
     }
 
     @Override

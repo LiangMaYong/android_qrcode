@@ -65,15 +65,11 @@ final class CameraConfigurationManager {
             screenResolutionForCamera.x = screenResolution.y;
             screenResolutionForCamera.y = screenResolution.x;
         }
-        float screenReta = (screenResolutionForCamera.x * 1f / screenResolutionForCamera.y);
-        Log.d(TAG, "screenReta: " + screenReta);
         if (screenResolutionForCamera.x > 640) {
             screenResolutionForCamera.y = 640 * screenResolutionForCamera.y / screenResolutionForCamera.x;
             screenResolutionForCamera.x = 640;
         }
         cameraResolution = getCameraResolution(parameters, screenResolutionForCamera);
-        float cameraReta = (cameraResolution.x * 1f / cameraResolution.y);
-        Log.d(TAG, "cameraReta: " + cameraReta);
         Log.d(TAG, "Screen resolution for Camera: " + screenResolutionForCamera);
         Log.d(TAG, "Camera resolution: " + cameraResolution);
     }
@@ -139,8 +135,7 @@ final class CameraConfigurationManager {
     }
 
     private static Point findBadPreviewSizeValue(String previewSizeValueString, Point screenResolution) {
-        Log.e(TAG, "findBadPreviewSizeValue: o x:" + screenResolution.x + " y :" + screenResolution.y);
-        Log.e(TAG, "findBadPreviewSizeValue: o x/y:" + (screenResolution.x * 1f / screenResolution.y));
+        Log.d(TAG, "findBadPreviewSizeValue: screenResolution x:" + screenResolution.x + "  y:" + screenResolution.y + " x/y:" + (screenResolution.x * 1f / screenResolution.y));
         int bestX = 0;
         int bestY = 0;
         float diff = 1000f;
@@ -160,8 +155,6 @@ final class CameraConfigurationManager {
             try {
                 newX = Integer.parseInt(previewSize.substring(0, dimPosition));
                 newY = Integer.parseInt(previewSize.substring(dimPosition + 1));
-                Log.e(TAG, "findBadPreviewSizeValue: x:" + newX + " y :" + newY);
-                Log.e(TAG, "findBadPreviewSizeValue: x/y:" + (newX * 1f / newY));
             } catch (NumberFormatException nfe) {
                 Log.w(TAG, "Bad preview-size: " + previewSize);
                 continue;
@@ -181,18 +174,22 @@ final class CameraConfigurationManager {
             }
         }
         if (bestX > 0 && bestY > 0) {
+            Log.d(TAG, "findBadPreviewSizeValue: cameraResolution x:" + bestX + "  y:" + bestY + " x/y:" + (bestX * 1f / bestY));
             return new Point(bestX, bestY);
         }
         return null;
     }
 
-    private static Point findBestPreviewSizeValue(CharSequence previewSizeValueString, Point screenResolution) {
+    private static Point findBestPreviewSizeValue(String previewSizeValueString, Point screenResolution) {
+        Log.d(TAG, "findBadPreviewSizeValue: screenResolution x:" + screenResolution.x + "  y:" + screenResolution.y + " x/y:" + (screenResolution.x * 1f / screenResolution.y));
         int bestX = 0;
         int bestY = 0;
-        int diff = Integer.MAX_VALUE;
-        for (String previewSize : COMMA_PATTERN.split(previewSizeValueString)) {
+        float diff = 1000f;
+        float xy = screenResolution.x * 1f / screenResolution.y;
 
-            previewSize = previewSize.trim();
+        String[] previews = previewSizeValueString.split(",");
+        for (int i = 0; i < previews.length; i++) {
+            String previewSize = previews[i].trim();
             int dimPosition = previewSize.indexOf('x');
             if (dimPosition < 0) {
                 Log.w(TAG, "Bad preview-size: " + previewSize);
@@ -209,20 +206,21 @@ final class CameraConfigurationManager {
                 continue;
             }
 
-            int newDiff = Math.abs(newX - screenResolution.x) + Math.abs(newY - screenResolution.y);
-            if (newDiff == 0) {
-                bestX = newX;
-                bestY = newY;
-                break;
-            } else if (newDiff < diff) {
+            float sizeDiff = 0;
+            if (newX > screenResolution.x) {
+                sizeDiff = newX / screenResolution.x;
+            } else {
+                sizeDiff = screenResolution.x / newX;
+            }
+            float newDiff = Math.abs(newX * 1f / newY - xy) * 10f + sizeDiff;
+            if (newDiff < diff) {
                 bestX = newX;
                 bestY = newY;
                 diff = newDiff;
             }
-
         }
-
         if (bestX > 0 && bestY > 0) {
+            Log.d(TAG, "findBadPreviewSizeValue: cameraResolution x:" + bestX + "  y:" + bestY + " x/y:" + (bestX * 1f / bestY));
             return new Point(bestX, bestY);
         }
         return null;

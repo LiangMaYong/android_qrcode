@@ -69,7 +69,7 @@ public final class DecodeCaptureViewHandler extends Handler {
                 CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
             }
         } else if (message.what == R.id.restart_preview) {
-            Log.d(TAG, "Got restart preview message");
+            Log.d(TAG, "Got restartPreview preview message");
             restartPreviewAndDecode();
         } else if (message.what == R.id.decode_succeeded) {
             Log.d(TAG, "Got decode succeeded message");

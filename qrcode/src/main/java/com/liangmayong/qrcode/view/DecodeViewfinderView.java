@@ -117,14 +117,16 @@ public final class DecodeViewfinderView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         RectF frame = new RectF(CameraManager.get().getFramingRect());
-//        drawRect(canvas,frame);
+        if (frame.bottom > canvas.getHeight() - framePadding) {
+            frame.bottom = canvas.getHeight() - framePadding;
+        }
+        if (frame.top < framePadding) {
+            frame.top = framePadding;
+        }
         frame.left = frame.left + framePadding;
         frame.right = frame.right - framePadding;
         frame.top = frame.top + framePadding;
         frame.bottom = frame.bottom - framePadding;
-        if (frame.top > canvas.getHeight() - frame.bottom) {
-            frame.bottom = canvas.getHeight() - frame.top;
-        }
         float absw = Math.abs(frame.right - frame.left);
         float absh = Math.abs(frame.bottom - frame.top);
         float w = absw;
