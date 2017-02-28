@@ -2,6 +2,7 @@ package com.liangmayong.android_qrcode;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.zxing.Result;
@@ -39,8 +40,11 @@ public class QRScanActivity extends BaseActivity {
             public void onClick(View view) {
                 if (scanView.isEnableFlash()) {
                     scanView.disableFlash();
-                } else
+                    Log.e("TAG", "disableFlash:" + scanView.getFlashMode());
+                } else {
                     scanView.enableFlash();
+                    Log.e("TAG", "enableFlash:" + scanView.getFlashMode());
+                }
             }
         });
     }

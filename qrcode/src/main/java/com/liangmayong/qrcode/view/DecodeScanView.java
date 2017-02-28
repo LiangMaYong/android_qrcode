@@ -457,6 +457,15 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
     }
 
     /**
+     * getFlashMode
+     *
+     * @return flash mode
+     */
+    public String getFlashMode() {
+        return CameraManager.get().getFlashMode();
+    }
+
+    /**
      * isEnableFlash
      *
      * @return isEnableFlash

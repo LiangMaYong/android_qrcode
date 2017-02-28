@@ -229,12 +229,30 @@ public final class CameraManager {
                     PackageManager.FEATURE_CAMERA_FLASH)) {
                 Camera.Parameters p = camera.getParameters();
                 p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                p.getSupportedFlashModes();
                 camera.setParameters(p);
             }
         } catch (Exception e) {
         }
     }
 
+
+    /**
+     * getFlashMode
+     *
+     * @return flash mode
+     */
+    public String getFlashMode() {
+        try {
+            if (context.getPackageManager().hasSystemFeature(
+                    PackageManager.FEATURE_CAMERA_FLASH)) {
+                Camera.Parameters p = camera.getParameters();
+                return p.getFlashMode();
+            }
+        } catch (Exception e) {
+        }
+        return "";
+    }
 
     /**
      * isAutoFlash
@@ -316,7 +334,6 @@ public final class CameraManager {
                 configManager.initFromCameraParameters(camera);
             }
             configManager.setDesiredCameraParameters(camera);
-            FlashlightManager.enableFlashlight();
         }
     }
 
@@ -325,7 +342,6 @@ public final class CameraManager {
      */
     public void closeDriver() {
         if (camera != null) {
-            FlashlightManager.disableFlashlight();
             camera.release();
             camera = null;
         }
