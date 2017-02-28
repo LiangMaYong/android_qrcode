@@ -62,7 +62,6 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
     private OnOpenCameraListener openCameraListener;
     private OnResultIntentListener resultIntentListener;
     private DecodeInterceptor interceptor;
-    private boolean isEnableFlash = false;
     private float beepVolume = 0.10f;
     private long vibrateDuration = 200L;
     private int resultCode = Activity.RESULT_OK;
@@ -441,7 +440,6 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
      */
     public void enableFlash() {
         CameraManager.get().enableFlash();
-        isEnableFlash = true;
     }
 
     /**
@@ -449,7 +447,13 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
      */
     public void disableFlash() {
         CameraManager.get().disableFlash();
-        isEnableFlash = false;
+    }
+
+    /**
+     * autoFlash
+     */
+    public void autoFlash() {
+        CameraManager.get().autoFlash();
     }
 
     /**
@@ -458,7 +462,25 @@ public class DecodeScanView extends FrameLayout implements SurfaceHolder.Callbac
      * @return isEnableFlash
      */
     public boolean isEnableFlash() {
-        return isEnableFlash;
+        return CameraManager.get().isEnableFlash();
+    }
+
+    /**
+     * isAutoFlash
+     *
+     * @return isAutoFlash
+     */
+    public boolean isAutoFlash() {
+        return CameraManager.get().isAutoFlash();
+    }
+
+    /**
+     * isDisableFlash
+     *
+     * @return isDisableFlash
+     */
+    public boolean isDisableFlash() {
+        return CameraManager.get().isDisableFlash();
     }
 
     /**

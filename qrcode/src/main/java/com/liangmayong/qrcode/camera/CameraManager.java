@@ -181,7 +181,9 @@ public final class CameraManager {
      * enableFlash
      */
     public void enableFlash() {
-        FlashlightManager.enableFlashlight();
+        if (isEnableFlash()) {
+            return;
+        }
         try {
             if (context.getPackageManager().hasSystemFeature(
                     PackageManager.FEATURE_CAMERA_FLASH)) {
@@ -193,11 +195,75 @@ public final class CameraManager {
         }
     }
 
+
+    /**
+     * isEnableFlash
+     *
+     * @return bool
+     */
+    public boolean isEnableFlash() {
+        try {
+            if (context.getPackageManager().hasSystemFeature(
+                    PackageManager.FEATURE_CAMERA_FLASH)) {
+                Camera.Parameters p = camera.getParameters();
+                if (Camera.Parameters.FLASH_MODE_TORCH.equals(p.getFlashMode())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    /**
+     * autoFlash
+     */
+    public void autoFlash() {
+        if (isAutoFlash()) {
+            return;
+        }
+        try {
+            if (context.getPackageManager().hasSystemFeature(
+                    PackageManager.FEATURE_CAMERA_FLASH)) {
+                Camera.Parameters p = camera.getParameters();
+                p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                camera.setParameters(p);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+
+    /**
+     * isAutoFlash
+     *
+     * @return bool
+     */
+    public boolean isAutoFlash() {
+        try {
+            if (context.getPackageManager().hasSystemFeature(
+                    PackageManager.FEATURE_CAMERA_FLASH)) {
+                Camera.Parameters p = camera.getParameters();
+                if (Camera.Parameters.FLASH_MODE_AUTO.equals(p.getFlashMode())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
     /**
      * disableFlash
      */
     public void disableFlash() {
-        FlashlightManager.enableFlashlight();
+        if (isDisableFlash()) {
+            return;
+        }
         try {
             if (context.getPackageManager().hasSystemFeature(
                     PackageManager.FEATURE_CAMERA_FLASH)) {
@@ -207,6 +273,27 @@ public final class CameraManager {
             }
         } catch (Exception e) {
         }
+    }
+
+    /**
+     * isDisableFlash
+     *
+     * @return bool
+     */
+    public boolean isDisableFlash() {
+        try {
+            if (context.getPackageManager().hasSystemFeature(
+                    PackageManager.FEATURE_CAMERA_FLASH)) {
+                Camera.Parameters p = camera.getParameters();
+                if (Camera.Parameters.FLASH_MODE_OFF.equals(p.getFlashMode())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return false;
     }
 
     /**
